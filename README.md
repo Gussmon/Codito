@@ -80,3 +80,12 @@ Si Carlos ve cada día cuánto puede gastar y cómo avanza su meta, entonces ano
 - El PIN se guarda cifrado (SHA-256). **Nunca pedimos claves del banco.**
 
 > Es una versión de prueba (MVP): sirve para validar la idea con usuarios reales antes de construir la versión completa.
+
+## Cambios después del piloto (26 nov 2026)
+
+Probamos la app con 3 usuarias durante un día. Con lo que vimos en sus videos y respuestas:
+
+- Al crear la meta, la app ahora lleva directo a anotar el primer gasto (1 de 3 no anotó ninguno).
+- Si el correo ya tiene cuenta, pasa a "Iniciar sesión" con el correo ya escrito (2 de 3 se confundieron).
+- Nueva categoría "Gasolina" (lo pidió una usuaria).
+- La sugerencia de ahorro ya no propone el mismo monto que la persona ya aparta.

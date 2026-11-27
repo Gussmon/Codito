@@ -73,7 +73,7 @@
     const diario = base + usadoHoy + (bolsa < 0 ? bolsa / diasRestSemana : 0);
     const hoyG = porDia[hk] || 0;
     let sugerida = null;
-    if (falta > 0 && libre > 0 && (libre - ahorroMes) / 30 < 10) sugerida = Math.max(10, Math.floor(libre * 0.2 / 10) * 10);
+    if (falta > 0 && libre > 0 && (libre - ahorroMes) / 30 < 10) sugerida = Math.max(10, Math.min(Math.floor(libre * 0.2 / 10) * 10, Math.floor(ahorroMes * 0.5 / 10) * 10));
     return { falta, ahorroSemana: ahorroMes / 4.345, ahorroDia: ahorroMes / 30.44, diario, hoyG, puedes: diario - hoyG, bolsa, base, domingo: hoy.getDay() === 0, pct: Math.min(100, m.ahorrado / m.monto * 100), fin, libre, ahorroMes, sugerida };
   }
 
@@ -97,7 +97,7 @@
     $('hoyMsg').textContent = c.libre <= 0
       ? 'Tus gastos fijos son iguales o mayores a lo que ganas. Revisa tus números en "Mi meta".'
       : c.sugerida
-      ? 'Ojo: apartando ' + sol(c.ahorroMes) + ' al mes te quedan muy pocos soles para tu día a día. Prueba apartar ' + sol(c.sugerida) + ' en "Mi meta": llegas un poco después, pero sin pasar apuros.'
+      ? 'Ojo: apartando ' + sol(c.ahorroMes) + ' al mes te quedan muy pocos soles para tu día a día. Prueba apartar ' + sol(c.sugerida) + ' en la pestaña "Meta": llegas un poco después, pero sin pasar apuros.'
       : c.puedes < 0
       ? 'Hoy te pasaste ' + sol(-c.puedes) + '. Tranqui: mañana Codito reparte la diferencia en los días que quedan.'
       : 'Llevas ' + sol(c.hoyG) + ' de ' + sol(Math.max(0, c.diario)) + '. Es un límite, no una meta.';
@@ -203,7 +203,7 @@
     if (!/^\d{4}$/.test(pin)) return err('sErr', 'El PIN debe tener 4 números.');
     if (!$('sOk').checked) return err('sErr', 'Para continuar, acepta que guardemos tus datos en este celular.');
     const users = store.get(USERS, {});
-    if (users[email]) return err('sErr', 'Ese correo ya tiene cuenta. Inicia sesión.');
+    if (users[email]) { tab(false); $('lEmail').value = email; $('lPin').focus(); return err('lErr', 'Ya tienes una cuenta con ese correo en este celular. Solo escribe tu PIN para entrar.'); }
     users[email] = { name, pin: await hashPin(email, pin), at: Date.now() };
     store.set(USERS, users);
     enter({ name, email });
@@ -462,7 +462,7 @@
     const nuevo = !S.meta;
     if (nuevo || !S.start) S.start = Date.now();
     S.meta = { nombre: $('fNombre').value.trim(), monto: +$('fMonto').value, ahorroMes: +$('fAhorro').value, ingreso: +$('fIngreso').value, fijos: +$('fFijos').value, menu: +$('fMenu').value || 0, pasaje: +$('fPasaje').value || 0, ahorrado: S.meta ? S.meta.ahorrado : 0 };
-    save(); render(); go('hoy'); toast(nuevo ? 'Meta creada' : 'Meta actualizada');
+    save(); render(); if (nuevo) { go('anotar'); toast('Meta creada. Ahora anota tu primer gasto de hoy'); } else { go('hoy'); toast('Meta actualizada'); }
   });
   $('btnAporte').addEventListener('click', () => {
     const v = parseFloat($('aporte').value); if (!(v > 0)) return;
