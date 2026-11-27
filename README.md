@@ -25,7 +25,8 @@ Autor: **Gustavo Alonso Condor Llanos**
 | Pantalla "¿Cómo funciona?" | ✅ |
 | Meta en 3 pasos | ✅ |
 | Calendario del mes (verde: bajo el límite, rojo: te pasaste) | ✅ |
-| Registro desde la captura de Yape | ✋ Manual por WhatsApp (por ahora) |
+| Marcar gastos pagados con Yape (para medir cuánto se usa) | ✅ |
+| Leer la captura de Yape automáticamente | Próxima versión |
 
 ## ¿Cómo funciona?
 
