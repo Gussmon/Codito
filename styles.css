@@ -229,3 +229,13 @@ nav .in { grid-template-columns: repeat(4, 1fr); }
 .legend .today { border: 2px solid var(--ink); }
 
 .btn.wa { background: #1F7A52; color: #fff; text-align: center; text-decoration: none; display: block; }
+
+/* Forma de pago y prueba */
+.pays { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.pays button, .opts button { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px; padding: 10px 4px; font-weight: 700; font-size: 14px; cursor: pointer; }
+.pays button[aria-pressed="true"], .opts button[aria-pressed="true"] { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.test { border-color: var(--green); }
+.qs { display: flex; flex-direction: column; gap: 12px; }
+.qq p { margin: 0 0 6px; font-size: 14.5px; font-weight: 700; line-height: 1.35; }
+.opts { display: flex; gap: 6px; }
+.opts button { flex: 1; padding: 8px 4px; }

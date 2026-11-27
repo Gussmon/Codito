@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#1F7A52">
 <link rel="icon" href="assets/codito.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="styles.css?v=5">
+<link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
 
@@ -96,8 +96,21 @@
         <div class="mini"><b id="stPeq">S/ 0</b><span>en gastos de S/ 10 o menos</span></div>
       </div>
       <p class="sub" id="stMsg"></p>
-      <a class="btn wa" id="btnShare" href="#" target="_blank" rel="noopener">Enviar mi resumen por WhatsApp</a>
-      <p class="hint">Solo envía tus totales de la semana. Nos ayuda a mejorar Codito.</p>
+    </div>
+    <div class="card test" id="testCard">
+      <p class="lbl">Prueba de Codito</p>
+      <p class="sub">Después de usarla, responde y envía tu resultado a Gustavo. Toma 1 minuto.</p>
+      <div class="qs" id="qs">
+        <div class="qq" data-k="q1"><p>1. ¿Entendiste qué significa "Hoy puedes gastar hasta" sin que te expliquen?</p><div class="opts"><button type="button">Sí</button><button type="button">No</button></div></div>
+        <div class="qq" data-k="q2"><p>2. ¿Anotar un gasto te tomó menos de 10 segundos?</p><div class="opts"><button type="button">Sí</button><button type="button">No</button></div></div>
+        <div class="qq" data-k="q3"><p>3. ¿Te hizo pensar antes de gastar en algo pequeño?</p><div class="opts"><button type="button">Sí</button><button type="button">No</button></div></div>
+        <div class="qq" data-k="q4"><p>4. ¿La usarías todos los días durante un mes?</p><div class="opts"><button type="button">Sí</button><button type="button">Tal vez</button><button type="button">No</button></div></div>
+        <div class="qq" data-k="q5"><p>5. ¿Pagarías S/ 4.90 al mes si te ayuda a llegar a tu meta?</p><div class="opts"><button type="button">Sí</button><button type="button">Tal vez</button><button type="button">No</button></div></div>
+        <div class="qq" data-k="q6"><p>6. Del 1 al 5, ¿qué tan fácil fue usarla?</p><div class="opts"><button type="button">1</button><button type="button">2</button><button type="button">3</button><button type="button">4</button><button type="button">5</button></div></div>
+        <label for="q7">7. ¿Qué le cambiarías o agregarías?<input id="q7" type="text" maxlength="140" placeholder="Escribe aquí (opcional)"></label>
+      </div>
+      <a class="btn wa" id="btnShare" href="#" target="_blank" rel="noopener">Enviar mi resultado por WhatsApp</a>
+      <p class="hint" id="shareHint">Se envían tus totales y tus respuestas. No se envían tus gastos uno por uno.</p>
     </div>
   </section>
 
@@ -203,9 +216,15 @@
         <button type="button" class="cat" data-cat="Salidas" aria-pressed="false">Salidas</button>
         <button type="button" class="cat" data-cat="Otros" aria-pressed="false">Otros</button>
       </div>
-      <label class="check" for="gYape"><input id="gYape" type="checkbox"> Lo pagué con Yape</label>
+      <p class="q2" style="margin:0">¿Cómo pagaste?</p>
+      <div class="pays" id="pays" role="group" aria-label="Cómo pagaste">
+        <button type="button" data-p="Yape" aria-pressed="true">Yape</button>
+        <button type="button" data-p="Efectivo" aria-pressed="false">Efectivo</button>
+        <button type="button" data-p="Plin" aria-pressed="false">Plin</button>
+        <button type="button" data-p="Tarjeta" aria-pressed="false">Tarjeta</button>
+      </div>
       <button class="btn" type="submit">Guardar gasto</button>
-      <p class="note">Marca "Lo pagué con Yape" cuando corresponda. Así sabremos cuántos gastos se pagan con Yape y si vale la pena que Codito lea tus capturas en una próxima versión.</p>
+      <p class="note">Elegir cómo pagaste nos ayuda a saber si vale la pena que Codito lea tus capturas de Yape o Plin en una próxima versión.</p>
     </form>
   </section>
 </div>
@@ -254,6 +273,6 @@
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="app.js?v=5"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>

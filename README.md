@@ -25,8 +25,8 @@ Autor: **Gustavo Alonso Condor Llanos**
 | Pantalla "¿Cómo funciona?" | ✅ |
 | Meta en 3 pasos | ✅ |
 | Calendario del mes (verde: bajo el límite, rojo: te pasaste) | ✅ |
-| Marcar gastos pagados con Yape (para medir cuánto se usa) | ✅ |
-| Enviar el resumen de la semana por WhatsApp (evidencia de la prueba) | ✅ |
+| Forma de pago: Yape, efectivo, Plin o tarjeta | ✅ |
+| Prueba con 7 preguntas y envío del resultado por WhatsApp | ✅ |
 | Leer la captura de Yape automáticamente | Próxima versión |
 
 ## ¿Cómo funciona?

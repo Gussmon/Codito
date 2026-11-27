@@ -132,7 +132,7 @@
     deHoy.forEach(g => {
       const d = document.createElement('div'); d.className = 'item';
       const l = document.createElement('div'); l.textContent = g.c;
-      const s = document.createElement('small'); s.textContent = new Date(g.t).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }) + (g.y ? ' · Yape' : ''); l.append(s);
+      const s = document.createElement('small'); s.textContent = new Date(g.t).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }) + ' · ' + (g.p || (g.y ? 'Yape' : 'Efectivo')); l.append(s);
       const r = document.createElement('div'); r.style.display = 'flex'; r.style.alignItems = 'center';
       const v = document.createElement('b'); v.textContent = sol(g.m); v.style.fontVariantNumeric = 'tabular-nums';
       const x = document.createElement('button'); x.className = 'del'; x.textContent = '×'; x.setAttribute('aria-label', 'Borrar gasto de ' + sol(g.m));
@@ -152,23 +152,7 @@
     const hace7 = new Date(); hace7.setHours(0, 0, 0, 0); hace7.setDate(hace7.getDate() - 6);
     S.gastos.forEach(g => { if (g.t >= hace7.getTime() && g.m <= 10) peq += g.m; });
     $('stDias').textContent = n + ' de 7'; $('stPeq').textContent = sol(peq);
-    // Resumen para enviar por WhatsApp (evidencia de la prueba)
-    const sem = S.gastos.filter(g => g.t >= hace7.getTime());
-    const total = sem.reduce((a, g) => a + g.m, 0), yape = sem.filter(g => g.y).length;
-    const pctY = sem.length ? Math.round(yape / sem.length * 100) : 0;
-    const txt = 'Hola Gustavo, mi semana con Codito:\n' +
-      '- Días que anoté: ' + n + ' de 7\n' +
-      '- Gastos anotados: ' + sem.length + ' (total ' + sol(total) + ')\n' +
-      '- Pagados con Yape: ' + pctY + '%\n' +
-      '- Gastos de S/ 10 o menos: ' + sol(peq) + '\n' +
-      '- Meta "' + m.nombre + '": ' + Math.round(c.pct) + '% (' + sol(m.ahorrado) + ' de ' + sol(m.monto) + ')\n\n' +
-      'Mis respuestas (sí/no):\n' +
-      '1. ¿Entendí "Hoy puedes gastar" sin ayuda? \n' +
-      '2. ¿Gasté menos en cositas esta semana? \n' +
-      '3. ¿Pagaría S/ 4.90 al mes por Codito? \n' +
-      '4. ¿Qué cambiarías? ';
-    $('btnShare').href = 'https://wa.me/?text=' + encodeURIComponent(txt);
-    $('btnShare').hidden = !!user.demo;
+    shareLink();
 
     $('stMsg').textContent = n >= 5 ? 'Anotaste casi todos los días.' : n >= 3 ? 'Vas bien: intenta anotar todos los días.' : 'Anota cada día para que la cifra sea exacta.';
   }
@@ -413,18 +397,57 @@
     const l = $('calDayList'); l.textContent = '';
     const items = S.gastos.filter(g => dkey(new Date(g.t)) === dkey(f)).sort((a, b) => a.t - b.t);
     if (!items.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = activo ? 'Sin gastos anotados.' : 'Día fuera de tu registro.'; l.append(p); return; }
-    items.forEach(g => { const d = document.createElement('div'); d.className = 'item'; const a = document.createElement('div'); a.textContent = g.c; const s = document.createElement('small'); s.textContent = new Date(g.t).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }) + (g.y ? ' · Yape' : ''); a.append(s); const v = document.createElement('b'); v.textContent = sol(g.m); d.append(a, v); l.append(d); });
+    items.forEach(g => { const d = document.createElement('div'); d.className = 'item'; const a = document.createElement('div'); a.textContent = g.c; const s = document.createElement('small'); s.textContent = new Date(g.t).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }) + ' · ' + (g.p || (g.y ? 'Yape' : 'Efectivo')); a.append(s); const v = document.createElement('b'); v.textContent = sol(g.m); d.append(a, v); l.append(d); });
   }
   $('calPrev').onclick = () => { calMonth.setMonth(calMonth.getMonth() - 1); calendar(); };
   $('calNext').onclick = () => { calMonth.setMonth(calMonth.getMonth() + 1); calendar(); };
 
+
+  // ---------- Prueba: resumen + respuestas por WhatsApp ----------
+  const resp = {};
+  document.querySelectorAll('.qq').forEach(q => q.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    q.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); resp[q.dataset.k] = b.textContent; shareLink();
+  })));
+  $('q7').addEventListener('input', shareLink);
+  function shareLink() {
+    if (!S || !S.meta) return;
+    const m = S.meta, c = calc(), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    const inicio = new Date(S.start || Date.now()); inicio.setHours(0, 0, 0, 0);
+    const soloHoy = inicio.getTime() >= hoy.getTime();
+    const desde = soloHoy ? hoy.getTime() : hoy.getTime() - 6 * 86400000;
+    const sel = S.gastos.filter(g => g.t >= desde), total = sel.reduce((a, g) => a + g.m, 0);
+    const dias = new Set(sel.map(g => dkey(new Date(g.t)))).size;
+    const pagos = {}; sel.forEach(g => { const p = g.p || (g.y ? 'Yape' : 'Efectivo'); pagos[p] = (pagos[p] || 0) + 1; });
+    const pTxt = Object.keys(pagos).length ? Object.entries(pagos).sort((a, b) => b[1] - a[1]).map(([k, v]) => k + ' ' + Math.round(v / sel.length * 100) + '%').join(', ') : 'sin gastos';
+    const r = k => resp[k] || '-';
+    const lines = [
+      'Hola Gustavo, ' + (soloHoy ? 'mi día con Codito' : 'mi semana con Codito') + ':',
+      soloHoy ? '- Límite de hoy: ' + sol(Math.max(0, c.diario)) + ' | gasté: ' + sol(c.hoyG) : '- Días que anoté: ' + dias + ' de 7',
+      '- Gastos anotados: ' + sel.length + ' (total ' + sol(total) + ')',
+      '- Cómo pagué: ' + pTxt,
+      '- Meta: ' + m.nombre + ' (' + sol(m.monto) + ') | aparto ' + sol(c.ahorroMes) + ' al mes',
+      '',
+      'Mis respuestas:',
+      '1. Entendí "Hoy puedes gastar": ' + r('q1'),
+      '2. Anoté en menos de 10 s: ' + r('q2'),
+      '3. Me hizo pensar antes de gastar: ' + r('q3'),
+      '4. La usaría un mes: ' + r('q4'),
+      '5. Pagaría S/ 4.90: ' + r('q5'),
+      '6. Facilidad (1-5): ' + r('q6'),
+      '7. Cambiaría: ' + ($('q7').value.trim() || '-')
+    ];
+    $('btnShare').href = 'https://wa.me/?text=' + encodeURIComponent(lines.join('\n'));
+    $('testCard').hidden = !!user.demo;
+  }
+
   // ---------- Acciones ----------
-  let cat = 'Comida';
+  let cat = 'Comida', pay = 'Yape';
+  $('pays').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; pay = b.dataset.p; document.querySelectorAll('#pays button').forEach(x => x.setAttribute('aria-pressed', x === b)); });
   $('cats').addEventListener('click', e => { const b = e.target.closest('.cat'); if (!b) return; cat = b.dataset.cat; document.querySelectorAll('.cat').forEach(x => x.setAttribute('aria-pressed', x === b)); });
   $('formGasto').addEventListener('submit', e => {
     e.preventDefault(); const m = parseFloat($('gMonto').value); if (!(m > 0)) return;
-    S.gastos.push({ id: uid(), t: Date.now(), m, c: cat, y: $('gYape').checked });
-    save(); $('gMonto').value = ''; $('gYape').checked = false; render(); go('hoy'); toast('Gasto anotado');
+    S.gastos.push({ id: uid(), t: Date.now(), m, c: cat, p: pay, y: pay === 'Yape' });
+    save(); $('gMonto').value = ''; render(); go('hoy'); toast('Gasto anotado');
   });
   $('formMeta').addEventListener('submit', e => {
     e.preventDefault();
