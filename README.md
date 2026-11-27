@@ -26,6 +26,7 @@ Autor: **Gustavo Alonso Condor Llanos**
 | Meta en 3 pasos | ✅ |
 | Calendario del mes (verde: bajo el límite, rojo: te pasaste) | ✅ |
 | Marcar gastos pagados con Yape (para medir cuánto se usa) | ✅ |
+| Enviar el resumen de la semana por WhatsApp (evidencia de la prueba) | ✅ |
 | Leer la captura de Yape automáticamente | Próxima versión |
 
 ## ¿Cómo funciona?

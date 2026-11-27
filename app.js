@@ -152,6 +152,24 @@
     const hace7 = new Date(); hace7.setHours(0, 0, 0, 0); hace7.setDate(hace7.getDate() - 6);
     S.gastos.forEach(g => { if (g.t >= hace7.getTime() && g.m <= 10) peq += g.m; });
     $('stDias').textContent = n + ' de 7'; $('stPeq').textContent = sol(peq);
+    // Resumen para enviar por WhatsApp (evidencia de la prueba)
+    const sem = S.gastos.filter(g => g.t >= hace7.getTime());
+    const total = sem.reduce((a, g) => a + g.m, 0), yape = sem.filter(g => g.y).length;
+    const pctY = sem.length ? Math.round(yape / sem.length * 100) : 0;
+    const txt = 'Hola Gustavo, mi semana con Codito:\n' +
+      '- Días que anoté: ' + n + ' de 7\n' +
+      '- Gastos anotados: ' + sem.length + ' (total ' + sol(total) + ')\n' +
+      '- Pagados con Yape: ' + pctY + '%\n' +
+      '- Gastos de S/ 10 o menos: ' + sol(peq) + '\n' +
+      '- Meta "' + m.nombre + '": ' + Math.round(c.pct) + '% (' + sol(m.ahorrado) + ' de ' + sol(m.monto) + ')\n\n' +
+      'Mis respuestas (sí/no):\n' +
+      '1. ¿Entendí "Hoy puedes gastar" sin ayuda? \n' +
+      '2. ¿Gasté menos en cositas esta semana? \n' +
+      '3. ¿Pagaría S/ 4.90 al mes por Codito? \n' +
+      '4. ¿Qué cambiarías? ';
+    $('btnShare').href = 'https://wa.me/?text=' + encodeURIComponent(txt);
+    $('btnShare').hidden = !!user.demo;
+
     $('stMsg').textContent = n >= 5 ? 'Anotaste casi todos los días.' : n >= 3 ? 'Vas bien: intenta anotar todos los días.' : 'Anota cada día para que la cifra sea exacta.';
   }
 

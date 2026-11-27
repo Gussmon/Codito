@@ -227,3 +227,5 @@ nav .in { grid-template-columns: repeat(4, 1fr); }
 .legend .ok { background: var(--green-bg); border: 1px solid var(--green); }
 .legend .over { background: var(--pink-bg); border: 1px solid var(--coral); }
 .legend .today { border: 2px solid var(--ink); }
+
+.btn.wa { background: #1F7A52; color: #fff; text-align: center; text-decoration: none; display: block; }
