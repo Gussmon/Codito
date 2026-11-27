@@ -44,7 +44,7 @@
     </form>
   </div>
 
-  <button class="link" id="btnDemo">Solo quiero ver un ejemplo</button>
+  <div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap"><button class="link" data-help>¿Cómo funciona?</button><button class="link" id="btnDemo">Ver un ejemplo</button></div>
   <p class="fine">Versión MVP · tus datos se quedan en tu celular</p>
 </main>
 
@@ -54,16 +54,29 @@
     <img src="assets/codito.png" alt="">
     <div><h1 id="hello">Hola</h1><p id="helloSub">Sé codito con tus gastos</p></div>
     <span class="chip" id="demoChip" hidden>EJEMPLO</span>
-    <button class="icon-btn" id="btnLogout">Salir</button>
+    <button class="icon-btn" data-help aria-label="¿Cómo funciona?" style="margin-left:auto">?</button>
+    <button class="icon-btn" id="btnLogout" style="margin-left:0">Salir</button>
   </header>
 
   <!-- HOY -->
   <section id="v-hoy" class="view" style="display:flex;flex-direction:column;gap:16px">
     <div class="card hero">
       <p class="lbl" id="hoyFecha">Hoy</p>
-      <p class="lbl" style="color:var(--green)">Hoy puedes gastar</p>
+      <p class="lbl" style="color:var(--green)">Hoy puedes gastar hasta</p>
       <p class="money" id="hoyPuedes">S/ 0</p>
       <p class="sub" id="hoyMsg"></p>
+    </div>
+    <div class="card bolsa">
+      <div class="tape"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <p class="lbl" id="bolsaLbl">Tu bolsita de la semana</p><span style="font-size:22px" aria-hidden="true">👛</span>
+      </div>
+      <p class="money" id="bolsa" style="font-size:40px;color:var(--ink)">S/ 0</p>
+      <p class="sub" id="bolsaTxt"></p>
+      <div class="row" id="bolsaBtns" hidden>
+        <button class="btn green" id="btnBolsaMeta">A mi meta 🚀</button>
+        <button class="btn ghost" id="btnBolsaHoy">Usarla hoy 🍦</button>
+      </div>
     </div>
     <div class="card">
       <div class="tape p"></div>
@@ -101,7 +114,7 @@
       <div class="track"><div class="fill" id="fillMeta" style="width:0%"></div></div>
       <div class="grid2">
         <div class="mini"><b id="metaSemana">S/ 0</b><span>aparta esta semana</span></div>
-        <div class="mini"><b id="metaLlegas">–</b><span>tu fecha meta</span></div>
+        <div class="mini"><b id="metaLlegas">–</b><span>llegas aprox.</span></div>
       </div>
       <div class="row">
         <input id="aporte" type="number" inputmode="decimal" min="0" step="0.1" placeholder="S/ 20" aria-label="Monto que apartaste">
@@ -110,16 +123,42 @@
     </div>
     <form class="card" id="formMeta">
       <p class="lbl" id="formMetaTitle">Configura tu meta y tu mes</p>
-      <label for="fNombre">¿Para qué ahorras?<input id="fNombre" type="text" required maxlength="40" placeholder="✈️ Viaje a Cusco"></label>
-      <div class="row">
-        <label for="fMonto">Cuánto necesitas (S/)<input id="fMonto" type="number" inputmode="decimal" min="1" required></label>
-        <label for="fFecha">¿Para cuándo?<input id="fFecha" type="date" required></label>
+      <p class="sub" style="font-weight:700;color:var(--ink)">Elige una meta o escribe la tuya</p>
+      <div class="chips" id="chips">
+        <button type="button" class="chipb" data-n="📱 Celular nuevo" data-m="900">📱 Celular</button>
+        <button type="button" class="chipb" data-n="💻 Laptop" data-m="2500">💻 Laptop</button>
+        <button type="button" class="chipb" data-n="✈️ Viaje a Cusco" data-m="800">✈️ Viaje</button>
+        <button type="button" class="chipb" data-n="📚 Curso o carrera" data-m="600">📚 Estudios</button>
+        <button type="button" class="chipb" data-n="🛵 Inicial de moto" data-m="2000">🛵 Moto</button>
+        <button type="button" class="chipb" data-n="🛟 Fondo de emergencia" data-m="1000">🛟 Emergencias</button>
       </div>
+      <label for="fNombre">¿Para qué ahorras?<input id="fNombre" type="text" required maxlength="40" placeholder="✈️ Viaje a Cusco"></label>
+      <label for="fMonto">¿Cuánto necesitas? (S/)<input id="fMonto" type="number" inputmode="decimal" min="1" required></label>
       <div class="row">
         <label for="fIngreso">Lo que ganas al mes (S/)<input id="fIngreso" type="number" inputmode="decimal" min="0" required></label>
-        <label for="fFijos">Gastos fijos al mes (S/)<input id="fFijos" type="number" inputmode="decimal" min="0" required></label>
+        <label for="fFijos">Gastos fijos del mes (S/)<input id="fFijos" type="number" inputmode="decimal" min="0" required></label>
       </div>
-      <p class="note">Gastos fijos: alquiler, luz, agua, internet, celular y lo que das en casa. Con esto Codito calcula cuánto puedes gastar cada día.</p>
+      <div class="plans-box">
+        <p class="sub" style="font-weight:700;color:var(--ink)">Tu día a día (lo básico)</p>
+        <div class="row">
+          <label for="fMenu">Menú o comida (S/ al día)<input id="fMenu" type="number" inputmode="decimal" min="0" step="0.5" required placeholder="12"></label>
+          <label for="fPasaje">Pasajes (S/ al día)<input id="fPasaje" type="number" inputmode="decimal" min="0" step="0.5" required placeholder="4"></label>
+        </div>
+        <div class="chips" id="quick">
+          <button type="button" class="chipb" data-q="menu" aria-pressed="false">🍱 Llevo táper de casa</button>
+          <button type="button" class="chipb" data-q="pasaje" aria-pressed="false">🚶 Voy caminando</button>
+          <button type="button" class="chipb" data-q="casa" aria-pressed="false">🏠 Vivo con mi familia</button>
+        </div>
+        <p class="sub" id="basicoTxt" style="font-size:14px"></p>
+      </div>
+      <div class="plans-box">
+        <p class="sub" style="font-weight:700;color:var(--ink)">¿Cuánto apartas cada mes para tu meta?</p>
+        <div class="plans" id="plans"><p class="empty">Completa cuánto necesitas, cuánto ganas y tus gastos fijos, y te mostramos 3 planes.</p></div>
+        <label for="fAhorro" style="font-weight:600;color:var(--soft)">O escribe tu propio monto (S/ al mes)<input id="fAhorro" type="number" inputmode="decimal" min="1" required placeholder="200"></label>
+        <div class="resumen" id="resumen" hidden></div>
+        <div class="tips" id="tips" hidden></div>
+      </div>
+      <p class="note"><b>Gastos fijos</b> = solo lo que pagas una vez al mes: alquiler, luz, agua, internet, celular y lo que das en casa. Si vives con tu familia y no pagas alquiler, pon solo lo que aportas (puede ser poco o S/ 0). <b>La comida y los pasajes del día no van aquí</b>: salen de tu cifra diaria.</p>
       <button class="btn" type="submit">Guardar mi meta</button>
     </form>
     <div class="card">
@@ -153,6 +192,41 @@
   <button data-go="anotar"><span>➕</span>Anotar</button>
   <button data-go="meta"><span>🐷</span>Mi meta</button>
 </div></nav>
+
+<!-- ===== Cómo funciona ===== -->
+<div id="help" class="help" role="dialog" aria-modal="true" aria-labelledby="helpTitle" hidden>
+  <div class="help-in">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <h2 id="helpTitle">¿Cómo funciona Codito?</h2>
+      <button class="icon-btn" id="helpClose" style="margin-left:0">Cerrar</button>
+    </div>
+    <p class="sub">Codito te dice cada día cuánto puedes gastar para llegar a tu meta, sin bancos y sin claves.</p>
+
+    <ol class="steps">
+      <li><b>Crea tu meta</b><span>Elige qué quieres (un celular, un viaje, una laptop), cuánto cuesta, cuánto ganas y tus gastos fijos. Codito te propone 3 planes: rápido, equilibrado o tranquilo.</span></li>
+      <li><b>Mira tu cifra del día</b><span>Cada mañana ves <i>"Hoy puedes gastar hasta S/ __"</i>. De ahí salen tu menú, tus pasajes y tus antojos. Es un máximo, no algo que tengas que gastar.</span></li>
+      <li><b>Anota en 2 toques</b><span>Pones el monto, tocas la categoría y listo. Si pagaste con Yape, marcas la casilla.</span></li>
+      <li><b>Llena tu bolsita</b><span>Lo que no gastas en la semana se junta en tu bolsita. Tú decides: mandarlo a tu meta y llegar antes, o darte un gusto el domingo.</span></li>
+    </ol>
+
+    <div class="card formula">
+      <p class="lbl">La cuenta, sin misterio</p>
+      <p class="f-line"><span>Lo que ganas</span><span>S/ 1,500</span></p>
+      <p class="f-line"><span>− Gastos fijos (alquiler, servicios, casa)</span><span>S/ 600</span></p>
+      <p class="f-line"><span>− Lo que apartas para tu meta</span><span>S/ 150</span></p>
+      <p class="f-line total"><span>= Libre para el mes</span><span>S/ 750</span></p>
+      <p class="f-line total"><span>÷ 30 días = hoy puedes gastar hasta</span><span>S/ 25</span></p>
+      <p class="sub" style="font-size:13px">Por ejemplo: menú S/ 10 + pasajes S/ 3 + S/ 12 para un antojo o una salida.</p>
+      <p class="sub" style="font-size:13px">Si un día gastas de más, la diferencia se reparte en los días que quedan de la semana. Si gastas de menos, va a tu bolsita.</p>
+    </div>
+
+    <div class="card">
+      <p class="lbl">Tus datos</p>
+      <p class="sub">Tu cuenta, tu meta y tus gastos se guardan solo en tu celular. Tu PIN se guarda cifrado. Codito nunca te pide claves ni datos de tu banco (Ley N.° 29733).</p>
+    </div>
+    <button class="btn" id="helpOk">¡Entendido! 🐷</button>
+  </div>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="app.js"></script>
