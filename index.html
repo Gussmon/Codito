@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Codito</title>
+<meta name="description" content="Codito: crea tu meta de ahorro, mira cuánto puedes gastar hoy y anota tus gastos en 2 toques.">
+<meta name="theme-color" content="#1F7A52">
+<link rel="icon" href="assets/codito.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== Bienvenida e inicio de sesión ===== -->
+<main id="auth" class="auth">
+  <div class="brand">
+    <div class="halo"><img src="assets/codito.png" alt="Chanchito de Codito"></div>
+    <h1>Codito</h1>
+    <p class="slogan">Sé codito con tus gastos, no con tus metas</p>
+  </div>
+
+  <div class="card">
+    <div class="tape"></div>
+    <div class="tabs" role="tablist">
+      <button id="tabLogin" role="tab" aria-selected="true">Iniciar sesión</button>
+      <button id="tabSignup" role="tab" aria-selected="false">Crear cuenta</button>
+    </div>
+
+    <form id="formLogin" novalidate>
+      <label for="lEmail">Correo<input id="lEmail" type="email" autocomplete="email" placeholder="carlos@gmail.com" required></label>
+      <label for="lPin">PIN de 4 dígitos<input id="lPin" type="password" inputmode="numeric" maxlength="4" autocomplete="current-password" placeholder="••••" required></label>
+      <p class="err" id="lErr" hidden></p>
+      <button class="btn" type="submit">Entrar</button>
+    </form>
+
+    <form id="formSignup" novalidate hidden>
+      <label for="sName">¿Cómo te llamas?<input id="sName" type="text" autocomplete="given-name" maxlength="30" placeholder="Carlos" required></label>
+      <label for="sEmail">Correo<input id="sEmail" type="email" autocomplete="email" placeholder="carlos@gmail.com" required></label>
+      <label for="sPin">Crea un PIN de 4 dígitos<input id="sPin" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" placeholder="••••" required></label>
+      <label class="check" for="sOk"><input id="sOk" type="checkbox" required> Acepto que Codito guarde mi meta y mis gastos en este celular para ayudarme a ahorrar (Ley N.° 29733). Nunca pedimos claves del banco.</label>
+      <p class="err" id="sErr" hidden></p>
+      <button class="btn green" type="submit">Crear mi cuenta</button>
+    </form>
+  </div>
+
+  <button class="link" id="btnDemo">Solo quiero ver un ejemplo</button>
+  <p class="fine">Versión MVP · tus datos se quedan en tu celular</p>
+</main>
+
+<!-- ===== App ===== -->
+<div id="main" class="app" hidden>
+  <header>
+    <img src="assets/codito.png" alt="">
+    <div><h1 id="hello">Hola</h1><p id="helloSub">Sé codito con tus gastos</p></div>
+    <span class="chip" id="demoChip" hidden>EJEMPLO</span>
+    <button class="icon-btn" id="btnLogout">Salir</button>
+  </header>
+
+  <!-- HOY -->
+  <section id="v-hoy" class="view" style="display:flex;flex-direction:column;gap:16px">
+    <div class="card hero">
+      <p class="lbl" id="hoyFecha">Hoy</p>
+      <p class="lbl" style="color:var(--green)">Hoy puedes gastar</p>
+      <p class="money" id="hoyPuedes">S/ 0</p>
+      <p class="sub" id="hoyMsg"></p>
+    </div>
+    <div class="card">
+      <div class="tape p"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+        <p class="lbl" id="metaNombreMini">Mi meta</p><p class="sub" id="metaPctMini" style="font-weight:800"></p>
+      </div>
+      <div class="track"><div class="fill" id="fillMini" style="width:0%"></div></div>
+      <p class="sub" id="metaFaltaMini"></p>
+    </div>
+    <div class="card">
+      <p class="lbl">Gastos de hoy</p>
+      <div class="list" id="listaHoy"></div>
+      <button class="btn" data-go="anotar">+ Anotar gasto</button>
+    </div>
+    <div class="card">
+      <div class="tape g"></div>
+      <p class="lbl">Mi semana con Codito</p>
+      <div class="dots" id="dots"></div>
+      <div class="grid2">
+        <div class="mini"><b id="stDias">0</b><span>días que anotaste</span></div>
+        <div class="mini"><b id="stPeq">S/ 0</b><span>en gastitos (hasta S/ 10)</span></div>
+      </div>
+      <p class="hand" id="stMsg"></p>
+    </div>
+  </section>
+
+  <!-- META -->
+  <section id="v-meta" class="view" hidden style="flex-direction:column;gap:16px">
+    <div class="card" id="metaCard">
+      <div class="tape"></div>
+      <p class="lbl">Mi meta</p>
+      <p style="font-family:var(--display);font-size:28px;font-weight:600;margin:0" id="metaNombre"></p>
+      <p class="money" id="metaAhorrado" style="font-size:46px;color:var(--ink)">S/ 0</p>
+      <p class="sub" id="metaDe"></p>
+      <div class="track"><div class="fill" id="fillMeta" style="width:0%"></div></div>
+      <div class="grid2">
+        <div class="mini"><b id="metaSemana">S/ 0</b><span>aparta esta semana</span></div>
+        <div class="mini"><b id="metaLlegas">–</b><span>tu fecha meta</span></div>
+      </div>
+      <div class="row">
+        <input id="aporte" type="number" inputmode="decimal" min="0" step="0.1" placeholder="S/ 20" aria-label="Monto que apartaste">
+        <button class="btn green" id="btnAporte">Aparté para mi meta</button>
+      </div>
+    </div>
+    <form class="card" id="formMeta">
+      <p class="lbl" id="formMetaTitle">Configura tu meta y tu mes</p>
+      <label for="fNombre">¿Para qué ahorras?<input id="fNombre" type="text" required maxlength="40" placeholder="✈️ Viaje a Cusco"></label>
+      <div class="row">
+        <label for="fMonto">Cuánto necesitas (S/)<input id="fMonto" type="number" inputmode="decimal" min="1" required></label>
+        <label for="fFecha">¿Para cuándo?<input id="fFecha" type="date" required></label>
+      </div>
+      <div class="row">
+        <label for="fIngreso">Lo que ganas al mes (S/)<input id="fIngreso" type="number" inputmode="decimal" min="0" required></label>
+        <label for="fFijos">Gastos fijos al mes (S/)<input id="fFijos" type="number" inputmode="decimal" min="0" required></label>
+      </div>
+      <p class="note">Gastos fijos: alquiler, luz, agua, internet, celular y lo que das en casa. Con esto Codito calcula cuánto puedes gastar cada día.</p>
+      <button class="btn" type="submit">Guardar mi meta</button>
+    </form>
+    <div class="card">
+      <p class="lbl">Empezar de cero</p>
+      <p class="sub">Borra tu meta y tus gastos de este celular.</p>
+      <div class="confirm" id="resetBox"></div>
+    </div>
+  </section>
+
+  <!-- ANOTAR -->
+  <section id="v-anotar" class="view" hidden style="flex-direction:column;gap:16px">
+    <form class="card" id="formGasto">
+      <div class="tape g"></div>
+      <p class="lbl">Nuevo gasto</p>
+      <input id="gMonto" class="amount" type="number" inputmode="decimal" min="0.1" step="0.1" required placeholder="S/ 0.00" aria-label="Monto del gasto">
+      <div class="cats" id="cats" role="group" aria-label="Categoría">
+        <button type="button" class="cat" data-cat="Comida" aria-pressed="true">🍔 Comida</button>
+        <button type="button" class="cat" data-cat="Pasaje" aria-pressed="false">🚌 Pasaje</button>
+        <button type="button" class="cat" data-cat="Salidas" aria-pressed="false">🎉 Salidas</button>
+        <button type="button" class="cat" data-cat="Otros" aria-pressed="false">🛍 Otros</button>
+      </div>
+      <label class="check" for="gYape"><input id="gYape" type="checkbox"> Lo pagué con Yape</label>
+      <button class="btn" type="submit">Guardar gasto</button>
+      <p class="note">¿Pagaste con Yape? En esta versión de prueba también puedes mandar la captura por WhatsApp y la anotamos por ti.</p>
+    </form>
+  </section>
+</div>
+
+<nav id="nav" aria-label="Secciones" hidden><div class="in">
+  <button data-go="hoy" aria-current="page"><span>☀️</span>Hoy</button>
+  <button data-go="anotar"><span>➕</span>Anotar</button>
+  <button data-go="meta"><span>🐷</span>Mi meta</button>
+</div></nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
