@@ -250,8 +250,8 @@ nav .in { grid-template-columns: repeat(4, 1fr); }
 .rtxt { position: absolute; inset: 0; display: grid; place-items: center; font-weight: 800; font-size: calc(var(--s) * .22); font-variant-numeric: tabular-nums; }
 /* Menú de 3 puntos */
 .kebab { position: relative; margin-left: auto; }
-.dots { display: flex; flex-direction: column; gap: 3px; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; }
-.dots span { width: 4px; height: 4px; border-radius: 50%; background: var(--ink); display: block; }
+.kdots { display: flex; flex-direction: column; gap: 3px; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; }
+.kdots span { width: 4px; height: 4px; border-radius: 50%; background: var(--ink); display: block; }
 .menu { position: absolute; right: 0; top: 46px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.14); min-width: 190px; padding: 6px; z-index: 15; display: flex; flex-direction: column; }
 .menu button { background: none; border: 0; text-align: left; padding: 12px 12px; border-radius: 8px; font-weight: 700; font-size: 15px; color: var(--ink); cursor: pointer; }
 .menu button:hover, .menu button:focus-visible { background: var(--bg); outline: none; }
