@@ -23,6 +23,8 @@ Autor: **Gustavo Alonso Condor Llanos**
 | Opciones rápidas: llevo táper, voy caminando, vivo con mi familia | ✅ |
 | Sobrante semanal: lo que no gastas va a tu meta o a otro día | ✅ |
 | Pantalla "¿Cómo funciona?" | ✅ |
+| Meta en 3 pasos | ✅ |
+| Calendario del mes (verde: bajo el límite, rojo: te pasaste) | ✅ |
 | Registro desde la captura de Yape | ✋ Manual por WhatsApp (por ahora) |
 
 ## ¿Cómo funciona?

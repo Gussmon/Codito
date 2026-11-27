@@ -86,10 +86,10 @@
     $('btnLogout').textContent = user.demo ? 'Crear cuenta' : 'Salir';
 
     if (!S.meta) { // cuenta nueva: primero la meta
-      $('metaCard').hidden = true; $('formMetaTitle').textContent = 'Paso 1 · Crea tu primera meta';
+      $('metaCard').hidden = true;
       return;
     }
-    $('metaCard').hidden = false; $('formMetaTitle').textContent = 'Editar mi meta y mi mes';
+    $('metaCard').hidden = false;
     const m = S.meta, c = calc(), hoy = new Date();
     $('hoyFecha').textContent = hoy.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' });
     $('hoyPuedes').textContent = sol(Math.max(0, c.puedes));
@@ -160,7 +160,9 @@
   function toast(t) { const e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => e.classList.remove('on'), 1900); }
   function go(v) {
     if (!S.meta && v !== 'meta') { v = 'meta'; toast('Primero crea tu meta'); }
-    ['hoy', 'meta', 'anotar'].forEach(k => { $('v-' + k).hidden = k !== v; });
+    ['hoy', 'meta', 'anotar', 'mes'].forEach(k => { $('v-' + k).hidden = k !== v; });
+    if (v === 'meta') showStep(1);
+    if (v === 'mes') { calMonth = new Date(); calMonth.setDate(1); calendar(); }
     document.querySelectorAll('nav button').forEach(b => { if (b.dataset.go === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
     if (v === 'anotar') setTimeout(() => $('gMonto').focus(), 60);
     window.scrollTo(0, 0);
@@ -249,7 +251,7 @@
     const max = Math.max(10, Math.floor(n.posible / 10) * 10);
     sl.min = 10; sl.max = max; sl.step = 10;
     let v = +$('fAhorro').value;
-    if (!(v > 0)) { v = Math.max(10, Math.floor(n.posible * 0.7 / 10) * 10); $('fAhorro').value = v; }
+    if (!(v > 0) || v > max) { v = Math.min(max, Math.max(10, Math.floor(n.posible * 0.5 / 10) * 10)); $('fAhorro').value = v; }
     sl.value = Math.min(max, v);
     box.hidden = false; empty.hidden = true;
     $('sliderMax').textContent = sol(max) + ' · más rápido';
@@ -301,17 +303,16 @@
   }
 
   // Opciones rápidas: táper, caminando, vivo con mi familia
-  $('quick').addEventListener('click', e => {
-    const b = e.target.closest('.chipb'); if (!b) return;
-    const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on);
-    if (b.dataset.q === 'menu') { $('fMenu').value = on ? 0 : ''; if (!on) $('fMenu').focus(); }
-    if (b.dataset.q === 'pasaje') { $('fPasaje').value = on ? 0 : ''; if (!on) $('fPasaje').focus(); }
-    if (b.dataset.q === 'casa') { if (on) { $('fFijos').focus(); toast('Pon solo lo que aportas en casa (o S/ 0)'); } }
-    planes();
-  });
+  document.querySelectorAll('.tog').forEach(b => b.addEventListener('click', () => {
+    const on = b.getAttribute('aria-pressed') !== 'true', id = b.dataset.q === 'menu' ? 'fMenu' : 'fPasaje';
+    $(id).value = on ? 0 : ''; planes(); if (!on) $(id).focus();
+  }));
   function syncQuick() {
-    document.querySelector('[data-q="menu"]').setAttribute('aria-pressed', $('fMenu').value !== '' && +$('fMenu').value === 0);
-    document.querySelector('[data-q="pasaje"]').setAttribute('aria-pressed', $('fPasaje').value !== '' && +$('fPasaje').value === 0);
+    [['menu', 'fMenu', 'lMenu'], ['pasaje', 'fPasaje', 'lPasaje']].forEach(([q, id, l]) => {
+      const on = $(id).value !== '' && +$(id).value === 0;
+      document.querySelector('.tog[data-q="' + q + '"]').setAttribute('aria-pressed', on);
+      $(l).hidden = on;
+    });
   }
   ['fMenu', 'fPasaje'].forEach(id => $(id).addEventListener('input', planes));
   ['fMonto', 'fIngreso', 'fFijos'].forEach(id => $(id).addEventListener('input', planes));
@@ -337,6 +338,67 @@
   document.querySelectorAll('[data-help]').forEach(b => b.addEventListener('click', openHelp));
   $('helpClose').onclick = closeHelp; $('helpOk').onclick = closeHelp;
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('help').hidden) closeHelp(); });
+
+
+  // ---------- Meta en 3 pasos ----------
+  function showStep(n) {
+    document.querySelectorAll('#formMeta .step').forEach(x => { x.hidden = +x.dataset.step !== n; });
+    $('stepLbl').textContent = 'Paso ' + n + ' de 3'; $('stepFill').style.width = (n / 3 * 100) + '%';
+    if (n === 3) planes();
+  }
+  document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => {
+    const cur = +b.closest('.step').dataset.step, next = +b.dataset.next;
+    if (next > cur) {
+      const bad = Array.from(b.closest('.step').querySelectorAll('input[required]')).find(i => !i.closest('[hidden]') && !i.checkValidity());
+      if (bad) { bad.reportValidity(); bad.focus(); return; }
+    }
+    showStep(next); $('formMeta').scrollIntoView({ block: 'start' });
+  }));
+
+  // ---------- Calendario del mes ----------
+  let calMonth = new Date(); calMonth.setDate(1);
+  function calendar() {
+    if (!S.meta) return;
+    const c = calc(), base = c.base, y = calMonth.getFullYear(), mo = calMonth.getMonth();
+    const tt = calMonth.toLocaleDateString('es-PE', { month: 'long', year: 'numeric' }); $('calTitle').textContent = tt.charAt(0).toUpperCase() + tt.slice(1);
+    const porDia = {}; S.gastos.forEach(g => { const k = dkey(new Date(g.t)); porDia[k] = (porDia[k] || 0) + g.m; });
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    const inicio = new Date(S.start || hoy); inicio.setHours(0, 0, 0, 0);
+    const cal = $('cal'); cal.textContent = '';
+    ['L', 'M', 'M', 'J', 'V', 'S', 'D'].forEach(d => { const e = document.createElement('span'); e.className = 'dow'; e.textContent = d; cal.append(e); });
+    const first = new Date(y, mo, 1), pad = (first.getDay() + 6) % 7, dias = new Date(y, mo + 1, 0).getDate();
+    for (let i = 0; i < pad; i++) cal.append(document.createElement('span'));
+    let gasto = 0, ahorro = 0;
+    for (let d = 1; d <= dias; d++) {
+      const f = new Date(y, mo, d), k = dkey(f), g = porDia[k] || 0;
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'day';
+      const n = document.createElement('span'); n.className = 'n'; n.textContent = d;
+      const m = document.createElement('span'); m.className = 'm';
+      const activo = f >= inicio && f <= hoy;
+      if (activo) {
+        gasto += g;
+        if (f < hoy) { ahorro += Math.max(0, base - g); b.classList.add(g <= base ? 'ok' : 'over'); }
+        m.textContent = g ? 'S/ ' + Math.round(g) : '–';
+      } else b.classList.add('off');
+      if (f.getTime() === hoy.getTime()) b.classList.add('today');
+      b.append(n, m);
+      b.onclick = () => dayDetail(f, porDia[k] || 0, base, activo);
+      cal.append(b);
+    }
+    let meta = 0; (S.mov || []).forEach(x => { const t = new Date(x.t); if (x.tipo === 'meta' && t.getFullYear() === y && t.getMonth() === mo) meta += x.m; });
+    $('calGasto').textContent = sol(gasto); $('calAhorro').textContent = sol(ahorro); $('calMeta').textContent = sol(meta);
+    $('calDay').hidden = true;
+  }
+  function dayDetail(f, total, base, activo) {
+    $('calDay').hidden = false;
+    $('calDayTitle').textContent = f.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long' }) + (activo ? ' · ' + sol(total) + ' de ' + sol(base) : '');
+    const l = $('calDayList'); l.textContent = '';
+    const items = S.gastos.filter(g => dkey(new Date(g.t)) === dkey(f)).sort((a, b) => a.t - b.t);
+    if (!items.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = activo ? 'Sin gastos anotados.' : 'Día fuera de tu registro.'; l.append(p); return; }
+    items.forEach(g => { const d = document.createElement('div'); d.className = 'item'; const a = document.createElement('div'); a.textContent = g.c; const s = document.createElement('small'); s.textContent = new Date(g.t).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }) + (g.y ? ' · Yape' : ''); a.append(s); const v = document.createElement('b'); v.textContent = sol(g.m); d.append(a, v); l.append(d); });
+  }
+  $('calPrev').onclick = () => { calMonth.setMonth(calMonth.getMonth() - 1); calendar(); };
+  $('calNext').onclick = () => { calMonth.setMonth(calMonth.getMonth() + 1); calendar(); };
 
   // ---------- Acciones ----------
   let cat = 'Comida';
