@@ -38,7 +38,7 @@
     const ad = (dias, m, c, h) => { const d = new Date(hoy); d.setDate(d.getDate() - dias); d.setHours(h || 13, 0, 0, 0); g.push({ id: uid(), t: d.getTime(), m, c, y: true }); };
     ad(0, 2, 'Pasaje', 8); ad(0, 10, 'Comida', 13); ad(1, 16, 'Comida'); ad(2, 14, 'Otros'); ad(3, 22, 'Salidas', 21); ad(5, 18, 'Comida');
     const st = new Date(hoy); st.setDate(st.getDate() - 7);
-    return { start: st.getTime(), meta: { nombre: '✈️ Viaje a Cusco', monto: 1200, ahorroMes: 200, ingreso: 1300, fijos: 500, menu: 12, pasaje: 4, ahorrado: 420 }, gastos: g };
+    return { start: st.getTime(), meta: { nombre: ' Viaje a Cusco', monto: 1200, ahorroMes: 200, ingreso: 1300, fijos: 500, menu: 12, pasaje: 4, ahorrado: 420 }, gastos: g };
   }
 
   // ---------- Estado ----------
@@ -80,7 +80,7 @@
   // ---------- Pintar ----------
   function render() {
     const first = (user.name || '').split(' ')[0];
-    $('hello').textContent = user.demo ? 'Hola 👋' : 'Hola, ' + first + ' 👋';
+    $('hello').textContent = user.demo ? 'Hola' : 'Hola, ' + first + '';
     $('helloSub').textContent = user.demo ? 'Estás viendo un ejemplo' : 'Sé codito con tus gastos';
     $('demoChip').hidden = !user.demo;
     $('btnLogout').textContent = user.demo ? 'Crear cuenta' : 'Salir';
@@ -100,23 +100,23 @@
       ? 'Ojo: apartando ' + sol(c.ahorroMes) + ' al mes te quedan muy pocos soles para tu día a día. Prueba apartar ' + sol(c.sugerida) + ' en "Mi meta": llegas un poco después, pero sin pasar apuros.'
       : c.puedes < 0
       ? 'Hoy te pasaste ' + sol(-c.puedes) + '. Tranqui: mañana Codito reparte la diferencia en los días que quedan.'
-      : 'Es un máximo, no una meta: llevas ' + sol(c.hoyG) + ' de ' + sol(Math.max(0, c.diario)) + '. Lo que no gastes hoy pasa a tu bolsita.';
+      : 'Llevas ' + sol(c.hoyG) + ' de ' + sol(Math.max(0, c.diario)) + '. Es un límite, no una meta.';
     // Bolsita
     const bx = $('bolsa'), bt = $('bolsaTxt'), ba = $('bolsaBtns');
     bx.textContent = sol(Math.abs(c.bolsa)); bx.classList.toggle('neg', c.bolsa < 0);
-    $('bolsaLbl').textContent = c.bolsa < -0.01 ? 'Esta semana te pasaste' : 'Tu bolsita de la semana';
+    $('bolsaLbl').textContent = c.bolsa < -0.01 ? 'Esta semana te pasaste' : 'Sobrante de la semana';
     ba.hidden = !(c.bolsa >= 1);
     if (c.bolsa >= 1) {
       const dias = Math.max(1, Math.round(c.bolsa / Math.max(0.01, c.ahorroDia)));
-      bt.textContent = (c.domingo ? '¡Es domingo! ' : '') + 'Es lo que no gastaste esta semana. Mándalo a tu meta y llegas ~' + dias + (dias === 1 ? ' día' : ' días') + ' antes, o úsalo hoy para darte un gusto.';
+      bt.textContent = (c.domingo ? 'Hoy es domingo. ' : '') + 'No lo gastaste esta semana. Si lo envías a tu meta, llegas unos ' + dias + (dias === 1 ? ' día' : ' días') + ' antes.';
     } else if (c.bolsa < -0.01) {
-      bt.textContent = 'No pasa nada: lo repartimos en los días que quedan de la semana, así que tu límite diario baja un poquito.';
+      bt.textContent = 'Se descuenta de los días que quedan de la semana.';
     } else {
-      bt.textContent = 'Lo que no gastes cada día se junta aquí. Puedes mandarlo a tu meta para llegar antes o guardarlo para el domingo.';
+      bt.textContent = 'Lo que no gastes cada día se acumula aquí.';
     }
     $('metaNombreMini').textContent = m.nombre; $('metaPctMini').textContent = Math.round(c.pct) + '%';
     $('fillMini').style.width = c.pct + '%'; $('fillMeta').style.width = c.pct + '%';
-    $('metaFaltaMini').textContent = c.falta > 0 ? 'Te faltan ' + sol(c.falta) + ' · esta semana aparta ' + sol(c.ahorroSemana) : '¡Llegaste a tu meta! 🎉';
+    $('metaFaltaMini').textContent = c.falta > 0 ? 'Te faltan ' + sol(c.falta) + ' · esta semana aparta ' + sol(c.ahorroSemana) : '¡Llegaste a tu meta!';
     $('metaNombre').textContent = m.nombre; $('metaAhorrado').textContent = sol(m.ahorrado);
     $('metaDe').textContent = 'de ' + sol(m.monto) + ' · ' + Math.round(c.pct) + '%';
     $('metaSemana').textContent = sol(c.ahorroSemana);
@@ -128,10 +128,10 @@
     const hk = dkey(hoy), lista = $('listaHoy'); lista.textContent = '';
     const deHoy = S.gastos.filter(g => dkey(new Date(g.t)) === hk).sort((a, b) => b.t - a.t);
     if (!deHoy.length) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = 'Aún no anotas nada hoy. Anota tu primer gasto en 2 toques.'; lista.append(p); }
-    const ic = { Comida: '🍔', Pasaje: '🚌', Salidas: '🎉', Otros: '🛍' };
+    const ic = { Comida: '', Pasaje: '', Salidas: '', Otros: '' };
     deHoy.forEach(g => {
       const d = document.createElement('div'); d.className = 'item';
-      const l = document.createElement('div'); l.textContent = ic[g.c] + ' ' + g.c;
+      const l = document.createElement('div'); l.textContent = g.c;
       const s = document.createElement('small'); s.textContent = new Date(g.t).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }) + (g.y ? ' · Yape' : ''); l.append(s);
       const r = document.createElement('div'); r.style.display = 'flex'; r.style.alignItems = 'center';
       const v = document.createElement('b'); v.textContent = sol(g.m); v.style.fontVariantNumeric = 'tabular-nums';
@@ -152,14 +152,14 @@
     const hace7 = new Date(); hace7.setHours(0, 0, 0, 0); hace7.setDate(hace7.getDate() - 6);
     S.gastos.forEach(g => { if (g.t >= hace7.getTime() && g.m <= 10) peq += g.m; });
     $('stDias').textContent = n + ' de 7'; $('stPeq').textContent = sol(peq);
-    $('stMsg').textContent = n >= 5 ? '¡Eres todo un codito! 🐷' : n >= 3 ? '¡Vas bien, sigue así!' : 'Anota cada día y mira la magia ✨';
+    $('stMsg').textContent = n >= 5 ? 'Anotaste casi todos los días.' : n >= 3 ? 'Vas bien: intenta anotar todos los días.' : 'Anota cada día para que la cifra sea exacta.';
   }
 
   // ---------- Navegación ----------
   let tt;
   function toast(t) { const e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(tt); tt = setTimeout(() => e.classList.remove('on'), 1900); }
   function go(v) {
-    if (!S.meta && v !== 'meta') { v = 'meta'; toast('Primero crea tu meta 🐷'); }
+    if (!S.meta && v !== 'meta') { v = 'meta'; toast('Primero crea tu meta'); }
     ['hoy', 'meta', 'anotar'].forEach(k => { $('v-' + k).hidden = k !== v; });
     document.querySelectorAll('nav button').forEach(b => { if (b.dataset.go === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
     if (v === 'anotar') setTimeout(() => $('gMonto').focus(), 60);
@@ -204,7 +204,7 @@
     store.set(USERS, users);
     enter({ name, email });
     openHelp();
-    toast('¡Hola, ' + name.split(' ')[0] + '! Crea tu meta');
+    toast('Cuenta creada. Ahora crea tu meta.');
   });
   $('formLogin').addEventListener('submit', async e => {
     e.preventDefault();
@@ -235,35 +235,40 @@
   }
   function planes() {
     syncQuick();
-    const box = $('plans'), n = nums();
+    const n = nums();
     const listoB = $('fMenu').value !== '' || $('fPasaje').value !== '';
     $('basicoTxt').textContent = !listoB ? 'Ejemplo: menú S/ 12 + pasajes S/ 4 = S/ 16 al día.'
-      : n.basico > 0 ? 'S/ ' + n.basico + ' al día × 30 días = ' + sol(n.basicoMes) + ' al mes en lo básico.'
-      : '¡Genial! Sin gastos de comida ni pasajes, todo lo libre puede ir a tu meta y a tus gustos. 🙌';
-    box.textContent = '';
-    const msg = t => { const p = document.createElement('p'); p.className = 'empty'; p.textContent = t; box.append(p); };
-    if (!n.listo) { msg('Completa tu meta, lo que ganas, tus gastos fijos y lo básico del día, y te mostramos cuánto puedes apartar.'); resumen(); return; }
-    if (n.posible < 10) { msg('Con estos números no queda nada para ahorrar todavía. Mira los consejos de abajo.'); resumen(); return; }
-    const actual = +$('fAhorro').value;
-    [['Al máximo', 1, 'solo lo básico'], ['Equilibrado', .7, 'y te quedan gustos'], ['Tranquilo', .5, 'más aire cada día']].forEach(([t, pct, d]) => {
-      const ah = Math.max(10, Math.floor(n.posible * pct / 10) * 10), L = llegada(n.falta, ah);
-      const b = document.createElement('button'); b.type = 'button'; b.className = 'plan'; b.setAttribute('aria-pressed', actual === ah);
-      const t1 = document.createElement('span'); t1.className = 't'; t1.textContent = t + (pct === .7 ? ' ⭐' : '');
-      const t2 = document.createElement('b'); t2.textContent = sol(ah);
-      const t3 = document.createElement('span'); t3.textContent = 'al mes · ' + L.m + (L.m === 1 ? ' mes' : ' meses');
-      const t4 = document.createElement('span'); t4.textContent = d;
-      b.append(t1, t2, t3, t4);
-      b.onclick = () => { $('fAhorro').value = ah; planes(); };
-      box.append(b);
-    });
+      : n.basico > 0 ? 'S/ ' + n.basico + ' al día × 30 = ' + sol(n.basicoMes) + ' al mes.'
+      : 'Sin gasto diario en comida ni pasajes.';
+    const box = $('sliderBox'), empty = $('sliderEmpty'), sl = $('fSlider');
+    if (!n.listo || n.posible < 10) {
+      box.hidden = true; empty.hidden = false;
+      empty.textContent = !n.listo ? 'Completa los datos de arriba para calcular cuánto puedes apartar.' : 'Con estos montos no queda dinero para apartar. Revisa las sugerencias.';
+      resumen(); return;
+    }
+    const max = Math.max(10, Math.floor(n.posible / 10) * 10);
+    sl.min = 10; sl.max = max; sl.step = 10;
+    let v = +$('fAhorro').value;
+    if (!(v > 0)) { v = Math.max(10, Math.floor(n.posible * 0.7 / 10) * 10); $('fAhorro').value = v; }
+    sl.value = Math.min(max, v);
+    box.hidden = false; empty.hidden = true;
+    $('sliderMax').textContent = sol(max) + ' · más rápido';
+    sliderTxt();
     resumen();
   }
+  function sliderTxt() {
+    const n = nums(), v = +$('fAhorro').value;
+    $('sliderMonto').textContent = sol(v || 0);
+    if (v > 0 && n.falta > 0) { const L = llegada(n.falta, v); $('sliderMeses').textContent = 'llegas en ' + L.m + (L.m === 1 ? ' mes' : ' meses') + ' (' + mesTxt(L.f) + ')'; }
+    else $('sliderMeses').textContent = '';
+  }
+  $('fSlider').addEventListener('input', () => { $('fAhorro').value = $('fSlider').value; sliderTxt(); resumen(); });
   function resumen() {
     const r = $('resumen'), tips = $('tips'), n = nums(), ah = +$('fAhorro').value;
     if (!n.listo) { r.hidden = true; tips.hidden = true; return; }
     r.hidden = false; r.textContent = '';
     const line = (a, b, cls) => { const p = document.createElement('p'); p.className = 'f-line' + (cls ? ' ' + cls : ''); const x = document.createElement('span'); x.textContent = a; const y = document.createElement('span'); y.textContent = b; p.append(x, y); r.append(p); };
-    const lb = document.createElement('p'); lb.className = 'lbl'; lb.textContent = 'Tu mes con Codito'; r.append(lb);
+    const lb = document.createElement('p'); lb.className = 'lbl'; lb.textContent = 'Resumen del mes'; r.append(lb);
     line('Lo que ganas', sol(n.ing)); line('− Gastos fijos', sol(n.fix)); line('− Lo básico (S/ ' + n.basico + ' × 30)', sol(n.basicoMes));
     line('= Puedes ahorrar hasta', sol(Math.max(0, n.posible)), 'total');
     const big = document.createElement('p'); big.className = 'big';
@@ -272,10 +277,10 @@
       const extra = n.posible - ah, dia = n.basico + extra / 30;
       line('Apartas para tu meta', sol(ah));
       if (extra >= 0) {
-        big.textContent = '≈ ' + sol(Math.floor(dia * 10) / 10) + ' al día: S/ ' + n.basico + ' de lo básico + ' + sol(Math.floor(extra / 3) / 10) + ' para gustos';
+        big.textContent = 'Para gastar: ' + sol(Math.floor(dia * 10) / 10) + ' al día (S/ ' + n.basico + ' básico + ' + sol(Math.floor(extra / 3) / 10) + ' libre)';
         const L = llegada(n.falta, ah), g = document.createElement('p'); g.className = 'goal';
-        g.textContent = '🎯 Llegas a tu meta en ' + L.m + (L.m === 1 ? ' mes' : ' meses') + ' (' + mesTxt(L.f) + ')'; r.append(g);
-        if (n.basico <= 8) { const k = document.createElement('p'); k.className = 'sub'; k.style.fontSize = '13px'; k.textContent = 'Como gastas poco en lo básico, puedes ahorrar más que la mayoría: aprovéchalo con el plan Al máximo. 💪'; r.append(k); }
+        g.textContent = 'Llegas a tu meta en ' + L.m + (L.m === 1 ? ' mes' : ' meses') + ' (' + mesTxt(L.f) + ')'; r.append(g);
+        if (n.basico <= 8) { const k = document.createElement('p'); k.className = 'sub'; k.style.fontSize = '13px'; k.textContent = 'Tu gasto diario es bajo: puedes subir el deslizador y llegar antes.'; r.append(k); }
       } else { big.textContent = 'Apartas ' + sol(-extra) + ' más de lo que te sobra: no te alcanzaría para comer y moverte.'; ajustado = true; }
     } else if (n.posible >= 10) { big.textContent = 'Elige un plan o escribe cuánto apartas.'; }
     else { big.textContent = 'Lo básico y tus gastos fijos ya usan todo lo que ganas.'; }
@@ -283,7 +288,7 @@
     r.classList.toggle('bad', ajustado);
     tips.hidden = !ajustado; tips.textContent = '';
     if (ajustado) {
-      const p = document.createElement('p'); p.innerHTML = '<b>💡 Ideas para que te alcance y puedas ahorrar:</b>'; tips.append(p);
+      const p = document.createElement('p'); p.innerHTML = '<b>Sugerencias para ahorrar:</b>'; tips.append(p);
       const ul = document.createElement('ul'), ideas = [];
       if (n.posible >= 10) ideas.push('Aparta como máximo ' + sol(Math.floor(n.posible / 10) * 10) + ' al mes: es lo que de verdad te sobra.');
       if (n.menu >= 10) ideas.push('Lleva táper 2 días por semana: ahorras unos ' + sol(Math.round(n.menu * 0.6 * 8)) + ' al mes en menús.');
@@ -310,19 +315,19 @@
   }
   ['fMenu', 'fPasaje'].forEach(id => $(id).addEventListener('input', planes));
   ['fMonto', 'fIngreso', 'fFijos'].forEach(id => $(id).addEventListener('input', planes));
-  $('fAhorro').addEventListener('input', () => { document.querySelectorAll('.plan').forEach(x => x.setAttribute('aria-pressed', String(+$('fAhorro').value === +x.querySelector('b').textContent.replace(/[^\d.]/g, '')))); resumen(); });
+  $('fAhorro').addEventListener('input', () => { const v = +$('fAhorro').value; if (v > 0) $('fSlider').value = v; sliderTxt(); resumen(); });
 
   $('btnBolsaMeta').addEventListener('click', () => {
     const c = calc(); if (c.bolsa < 1) return;
     const v = Math.floor(c.bolsa * 10) / 10, dias = Math.max(1, Math.round(v / Math.max(0.01, c.ahorroDia)));
     S.mov = S.mov || []; S.mov.push({ t: Date.now(), tipo: 'meta', m: v }); S.meta.ahorrado += v;
-    save(); render(); toast('+' + sol(v) + ' a tu meta · llegas ~' + dias + (dias === 1 ? ' día' : ' días') + ' antes 🚀');
+    save(); render(); toast('+' + sol(v) + ' a tu meta · llegas ~' + dias + (dias === 1 ? ' día' : ' días') + ' antes');
   });
   $('btnBolsaHoy').addEventListener('click', () => {
     const c = calc(); if (c.bolsa < 1) return;
     const v = Math.floor(c.bolsa * 10) / 10;
     S.mov = S.mov || []; S.mov.push({ t: Date.now(), tipo: 'hoy', m: v });
-    save(); render(); toast('Hoy tienes ' + sol(v) + ' extra. ¡Disfrútalo! 🍦');
+    save(); render(); toast('Hoy tienes ' + sol(v) + ' extra');
   });
 
 
@@ -339,18 +344,18 @@
   $('formGasto').addEventListener('submit', e => {
     e.preventDefault(); const m = parseFloat($('gMonto').value); if (!(m > 0)) return;
     S.gastos.push({ id: uid(), t: Date.now(), m, c: cat, y: $('gYape').checked });
-    save(); $('gMonto').value = ''; $('gYape').checked = false; render(); go('hoy'); toast('Gasto anotado ✓');
+    save(); $('gMonto').value = ''; $('gYape').checked = false; render(); go('hoy'); toast('Gasto anotado');
   });
   $('formMeta').addEventListener('submit', e => {
     e.preventDefault();
     const nuevo = !S.meta;
     if (nuevo || !S.start) S.start = Date.now();
     S.meta = { nombre: $('fNombre').value.trim(), monto: +$('fMonto').value, ahorroMes: +$('fAhorro').value, ingreso: +$('fIngreso').value, fijos: +$('fFijos').value, menu: +$('fMenu').value || 0, pasaje: +$('fPasaje').value || 0, ahorrado: S.meta ? S.meta.ahorrado : 0 };
-    save(); render(); go('hoy'); toast(nuevo ? '¡Meta creada! 🎯' : 'Meta actualizada ✓');
+    save(); render(); go('hoy'); toast(nuevo ? 'Meta creada' : 'Meta actualizada');
   });
   $('btnAporte').addEventListener('click', () => {
     const v = parseFloat($('aporte').value); if (!(v > 0)) return;
-    S.meta.ahorrado += v; save(); $('aporte').value = ''; render(); toast('¡Bien! +' + sol(v) + ' para tu meta 🐷');
+    S.meta.ahorrado += v; save(); $('aporte').value = ''; render(); toast('+' + sol(v) + ' para tu meta');
   });
   function askReset() {
     const box = $('resetBox'); box.textContent = '';

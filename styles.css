@@ -146,3 +146,45 @@ nav button span { display: block; font-size: 20px; }
 .tips { background: var(--butter); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
 .tips p { margin: 0; font-size: 14px; }
 .tips ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 5px; font-size: 14px; line-height: 1.4; color: var(--ink); }
+
+/* ===== Estilo sobrio (v2): sin cintas, sin sombras gruesas, sin letra de mano ===== */
+:root { --display: 'Nunito Sans', 'Segoe UI', Arial, sans-serif; --hand: 'Nunito Sans', 'Segoe UI', Arial, sans-serif; }
+body { background-image: none; }
+.tape { display: none; }
+.brand { gap: 6px; }
+.brand .logo { width: 88px; height: 88px; object-fit: contain; }
+.brand h1 { font-family: 'Fredoka', 'Nunito Sans', sans-serif; font-size: 34px; margin: 0; }
+.brand .slogan { font-family: var(--body); font-size: 15px; color: var(--soft); transform: none; }
+header h1 { font-family: var(--body); font-size: 20px; font-weight: 800; }
+.card { border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(46, 36, 48, .06); border-radius: 16px; }
+.hero { background: var(--green); border-color: var(--green); box-shadow: none; }
+.hero .lbl, .hero .sub { color: rgba(255, 255, 255, .85) !important; }
+.hero .money { color: #fff; font-weight: 800; letter-spacing: -1px; }
+.hero .money.neg { color: #FFD3C9; }
+.money { font-weight: 800; letter-spacing: -1px; }
+.bolsa { background: var(--surface); }
+.track { height: 10px; border: 0; }
+.fill { background: var(--green); }
+.btn { border: 0; box-shadow: none; border-radius: 12px; font-size: 16px; }
+.btn:active { transform: none; box-shadow: none; opacity: .85; }
+.btn.ghost { border: 1px solid var(--line); }
+.tabs button[aria-selected="true"] { box-shadow: none; }
+.chipb { border-width: 1px; font-weight: 600; }
+.chipb[aria-pressed="true"] { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+.cat { border-width: 1px; }
+.dot i { width: 18px; height: 18px; border-width: 1px; }
+.steps li { border: 1px solid var(--line); box-shadow: none; }
+.steps li::before { border: 0; background: var(--green); color: #fff; font-family: var(--body); font-size: 18px; }
+.steps b { font-family: var(--body); font-weight: 800; font-size: 17px; }
+.formula { box-shadow: none; border-color: var(--green); }
+.help h2 { font-family: var(--body); font-weight: 800; font-size: 24px; }
+.resumen .big { font-family: var(--body); font-weight: 800; font-size: 16px; }
+.icon-btn { border-width: 1px; }
+nav { border-top: 1px solid var(--line); }
+nav button { font-size: 15px; padding: 12px 4px; }
+/* Deslizador */
+.slider { display: flex; flex-direction: column; gap: 8px; }
+.slider-val { margin: 0; font-size: 15px; color: var(--soft); }
+.slider-val b { font-size: 22px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.slider-ends { display: flex; justify-content: space-between; font-size: 12px; color: var(--soft); }
+input[type=range] { width: 100%; accent-color: var(--green); height: 28px; }

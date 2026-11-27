@@ -1,4 +1,4 @@
-# 🐷 Codito
+# Codito
 
 > **Sé codito con tus gastos, no con tus metas.**
 
@@ -17,20 +17,20 @@ Autor: **Gustavo Alonso Condor Llanos**
 | Anotar un gasto en 2 toques (monto + categoría) | ✅ |
 | Barra de progreso de la meta y aportes | ✅ |
 | Resumen de la semana (días que anotaste, gastitos) | ✅ |
-| Metas sugeridas y 3 planes de ahorro mensual | ✅ |
+| Metas sugeridas y deslizador para elegir cuánto apartar al mes | ✅ |
 | Resumen del mes: saldo, cifra diaria y cuándo llegas | ✅ |
 | Consejos cuando el día a día queda ajustado | ✅ |
 | Opciones rápidas: llevo táper, voy caminando, vivo con mi familia | ✅ |
-| Bolsita: lo que no gastas va a tu meta o a un gusto | ✅ |
+| Sobrante semanal: lo que no gastas va a tu meta o a otro día | ✅ |
 | Pantalla "¿Cómo funciona?" | ✅ |
 | Registro desde la captura de Yape | ✋ Manual por WhatsApp (por ahora) |
 
 ## ¿Cómo funciona?
 
-1. **Crea tu meta.** Elige qué quieres, cuánto cuesta, cuánto ganas, tus gastos fijos y cuánto apartas al mes. Codito te muestra tu saldo del mes y en cuánto tiempo llegas. Si no alcanza, te da consejos.
+1. **Crea tu meta.** Elige qué quieres, cuánto cuesta, cuánto ganas, tus gastos fijos y tu gasto diario (menú y pasajes). Con el deslizador eliges cuánto apartar al mes y ves en cuánto tiempo llegas.
 2. **Mira tu cifra del día.** "Hoy puedes gastar hasta S/ __". Es un máximo, no algo que tengas que gastar.
 3. **Anota en 2 toques.** Monto, categoría y listo.
-4. **Llena tu bolsita.** Lo que no gastas en la semana se junta. Lo mandas a tu meta para llegar antes o te das un gusto el domingo.
+4. **Usa tu sobrante.** Lo que no gastas en la semana se acumula. Lo envías a tu meta para llegar antes o lo usas otro día.
 
 ### La cuenta
 
@@ -55,7 +55,7 @@ Lo que ganas                     S/ 1,500
 
 Los gastos fijos son solo lo que pagas una vez al mes (alquiler, servicios, lo que das en casa). La comida y los pasajes del día salen de la cifra diaria.
 
-Si un día gastas de más, la diferencia se reparte en los días que quedan de la semana. Si gastas de menos, va a tu bolsita.
+Si un día gastas de más, la diferencia se reparte en los días que quedan de la semana. Si gastas de menos, se suma a tu sobrante.
 
 ## Hipótesis que probamos
 
