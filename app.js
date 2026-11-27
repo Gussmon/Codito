@@ -83,7 +83,7 @@
     $('hello').textContent = user.demo ? 'Hola' : 'Hola, ' + first + '';
     $('helloSub').textContent = user.demo ? 'Estás viendo un ejemplo' : 'Sé codito con tus gastos';
     $('demoChip').hidden = !user.demo;
-    $('btnLogout').textContent = user.demo ? 'Crear cuenta' : 'Salir';
+    $('btnLogout').textContent = user.demo ? 'Crear mi cuenta' : 'Cerrar sesión'; $('btnLogout').style.color = user.demo ? 'var(--green)' : '';
 
     if (!S.meta) { // cuenta nueva: primero la meta
       $('metaCard').hidden = true;
@@ -108,14 +108,14 @@
     ba.hidden = !(c.bolsa >= 1);
     if (c.bolsa >= 1) {
       const dias = Math.max(1, Math.round(c.bolsa / Math.max(0.01, c.ahorroDia)));
-      bt.textContent = (c.domingo ? 'Hoy es domingo. ' : '') + 'No lo gastaste esta semana. Si lo envías a tu meta, llegas unos ' + dias + (dias === 1 ? ' día' : ' días') + ' antes.';
+      bt.textContent = (c.domingo ? 'Hoy es domingo. ' : '') + 'No lo gastaste esta semana. Si lo envías a tu meta, llegas ' + (dias === 1 ? 'un día' : 'unos ' + dias + ' días') + ' antes.';
     } else if (c.bolsa < -0.01) {
       bt.textContent = 'Se descuenta de los días que quedan de la semana.';
     } else {
       bt.textContent = 'Lo que no gastes cada día se acumula aquí.';
     }
     $('metaNombreMini').textContent = m.nombre; $('metaPctMini').textContent = Math.round(c.pct) + '%';
-    $('fillMini').style.width = c.pct + '%'; $('fillMeta').style.width = c.pct + '%';
+    ['fillMini', 'fillMeta'].forEach(id => $(id).setAttribute('stroke-dasharray', c.pct + ' 100')); $('metaPctBig').textContent = Math.round(c.pct) + '%';
     $('metaFaltaMini').textContent = c.falta > 0 ? 'Te faltan ' + sol(c.falta) + ' · esta semana aparta ' + sol(c.ahorroSemana) : '¡Llegaste a tu meta!';
     $('metaNombre').textContent = m.nombre; $('metaAhorrado').textContent = sol(m.ahorrado);
     $('metaDe').textContent = 'de ' + sol(m.monto) + ' · ' + Math.round(c.pct) + '%';
@@ -439,6 +439,14 @@
     $('btnShare').href = 'https://wa.me/?text=' + encodeURIComponent(lines.join('\n'));
     $('testCard').hidden = !!user.demo;
   }
+
+
+  // ---------- Menú de 3 puntos ----------
+  function closeMenu() { $('menu').hidden = true; $('btnMenu').setAttribute('aria-expanded', 'false'); }
+  $('btnMenu').addEventListener('click', e => { e.stopPropagation(); const open = $('menu').hidden; $('menu').hidden = !open; $('btnMenu').setAttribute('aria-expanded', String(open)); });
+  document.addEventListener('click', e => { if (!e.target.closest('.kebab')) closeMenu(); });
+  $('menu').addEventListener('click', () => closeMenu());
+  $('mEdit').addEventListener('click', () => go('meta'));
 
   // ---------- Acciones ----------
   let cat = 'Comida', pay = 'Yape';

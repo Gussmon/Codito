@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#1F7A52">
 <link rel="icon" href="assets/codito.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap">
-<link rel="stylesheet" href="styles.css?v=6">
+<link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 
@@ -53,8 +53,14 @@
     <img src="assets/codito.png" alt="">
     <div><h1 id="hello">Hola</h1><p id="helloSub">Sé codito con tus gastos</p></div>
     <span class="chip" id="demoChip" hidden>EJEMPLO</span>
-    <button class="icon-btn" data-help aria-label="¿Cómo funciona?" style="margin-left:auto">?</button>
-    <button class="icon-btn" id="btnLogout" style="margin-left:0">Salir</button>
+    <div class="kebab">
+      <button class="icon-btn dots" id="btnMenu" aria-label="Más opciones" aria-haspopup="true" aria-expanded="false"><span></span><span></span><span></span></button>
+      <div class="menu" id="menu" role="menu" hidden>
+        <button role="menuitem" data-help>¿Cómo funciona?</button>
+        <button role="menuitem" id="mEdit">Editar mi meta</button>
+        <button role="menuitem" id="btnLogout">Cerrar sesión</button>
+      </div>
+    </div>
   </header>
 
   <!-- HOY -->
@@ -77,11 +83,10 @@
       </div>
     </div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
-        <p class="lbl" id="metaNombreMini">Mi meta</p><p class="sub" id="metaPctMini" style="font-weight:800"></p>
+      <div class="metarow">
+        <div class="ring" style="--s:92px"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="rbg" cx="50" cy="50" r="42"/><circle class="rfg" id="fillMini" cx="50" cy="50" r="42" pathLength="100" stroke-dasharray="0 100"/></svg><span class="rtxt" id="metaPctMini">0%</span></div>
+        <div style="min-width:0"><p class="lbl" id="metaNombreMini">Mi meta</p><p class="sub" id="metaFaltaMini"></p></div>
       </div>
-      <div class="track"><div class="fill" id="fillMini" style="width:0%"></div></div>
-      <p class="sub" id="metaFaltaMini"></p>
     </div>
     <div class="card">
       <p class="lbl">Gastos de hoy</p>
@@ -117,11 +122,10 @@
   <!-- META -->
   <section id="v-meta" class="view" hidden style="flex-direction:column;gap:16px">
     <div class="card" id="metaCard">
-      <p class="lbl">Mi meta</p>
-      <p style="font-family:var(--display);font-size:28px;font-weight:600;margin:0" id="metaNombre"></p>
-      <p class="money" id="metaAhorrado" style="font-size:46px;color:var(--ink)">S/ 0</p>
-      <p class="sub" id="metaDe"></p>
-      <div class="track"><div class="fill" id="fillMeta" style="width:0%"></div></div>
+      <div class="metarow">
+        <div class="ring" style="--s:120px"><svg viewBox="0 0 100 100" aria-hidden="true"><circle class="rbg" cx="50" cy="50" r="42"/><circle class="rfg" id="fillMeta" cx="50" cy="50" r="42" pathLength="100" stroke-dasharray="0 100"/></svg><span class="rtxt" id="metaPctBig">0%</span></div>
+        <div style="min-width:0"><p class="lbl">Mi meta</p><p style="font-size:22px;font-weight:800;margin:2px 0" id="metaNombre"></p><p class="money" id="metaAhorrado" style="font-size:34px;color:var(--ink)">S/ 0</p><p class="sub" id="metaDe"></p></div>
+      </div>
       <div class="grid2">
         <div class="mini"><b id="metaSemana">S/ 0</b><span>aparta esta semana</span></div>
         <div class="mini"><b id="metaLlegas">–</b><span>llegas aprox.</span></div>
@@ -273,6 +277,6 @@
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="app.js?v=6"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>

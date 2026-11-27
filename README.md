@@ -23,6 +23,7 @@ Autor: **Gustavo Alonso Condor Llanos**
 | Opciones rápidas: llevo táper, voy caminando, vivo con mi familia | ✅ |
 | Sobrante semanal: lo que no gastas va a tu meta o a otro día | ✅ |
 | Pantalla "¿Cómo funciona?" | ✅ |
+| Círculo de progreso de la meta y menú de 3 puntos | ✅ |
 | Meta en 3 pasos | ✅ |
 | Calendario del mes (verde: bajo el límite, rojo: te pasaste) | ✅ |
 | Forma de pago: Yape, efectivo, Plin o tarjeta | ✅ |
